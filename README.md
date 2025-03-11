@@ -115,5 +115,3 @@ The fetched songs are sent to the OpenAI GPT API, which analyzes and groups them
 ### Displaying Results
 The grouped songs are displayed in the terminal.
 
-## License
-This project is licensed under the MIT License.
