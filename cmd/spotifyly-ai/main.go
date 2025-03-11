@@ -23,13 +23,13 @@ func main() {
 		log.Fatalf("Failed to initialize AI client: %v", err)
 	}
 
-	// Initialize repository , service and handler
+	// Initialize repository, service, and handler
 	repo := repository.NewRepository(spotifyClient)
 	svc := service.NewService(repo, aiClient)
 	h := handler.NewHandler(svc)
 
-	// Fetch, group songs
-	groupedSongs, err := h.GroupSongsByCriteria("genre") // ex: "genre"
+	// Fetch and group songs
+	groupedSongs, err := h.GroupSongsByCriteria("genre") // Example criteria: "genre"
 	if err != nil {
 		log.Fatalf("Failed to group songs: %v", err)
 	}

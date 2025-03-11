@@ -1,14 +1,10 @@
 package service
 
 import (
+	"spotifyly-ai/internal/models"
 	"spotifyly-ai/internal/repository"
 	"spotifyly-ai/pkg/ai"
 )
-
-type Song struct {
-	Name   string
-	Artist string
-}
 
 type Service struct {
 	repo     *repository.Repository
@@ -19,7 +15,7 @@ func NewService(repo *repository.Repository, aiClient *ai.AIClient) *Service {
 	return &Service{repo: repo, aiClient: aiClient}
 }
 
-func (s *Service) GroupSongsByCriteria(criteria string) (map[string][]Song, error) {
+func (s *Service) GroupSongsByCriteria(criteria string) (map[string][]models.Song, error) {
 	songs, err := s.repo.GetLikedSongs()
 	if err != nil {
 		return nil, err

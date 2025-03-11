@@ -3,7 +3,7 @@ package ai
 import (
 	"context"
 	"fmt"
-	"spotifyly-ai/internal/service"
+	"spotifyly-ai/internal/models"
 
 	openai "github.com/sashabaranov/go-openai"
 )
@@ -18,14 +18,14 @@ func NewAIClient() (*AIClient, error) {
 	return &AIClient{client: client}, nil
 }
 
-func (a *AIClient) GroupSongs(songs []service.Song, criteria string) (map[string][]service.Song, error) {
+func (a *AIClient) GroupSongs(songs []models.Song, criteria string) (map[string][]models.Song, error) {
 	// Prepare the prompt for AI
 	prompt := fmt.Sprintf("Group the following songs by %s:\n", criteria)
 	for _, song := range songs {
 		prompt += fmt.Sprintf("- %s by %s\n", song.Name, song.Artist)
 	}
 
-	// Send the prompt to OpenAI
+	// Use resp to parse the AI response
 	resp, err := a.client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
@@ -42,15 +42,18 @@ func (a *AIClient) GroupSongs(songs []service.Song, criteria string) (map[string
 		return nil, fmt.Errorf("failed to get AI response: %v", err)
 	}
 
+	// Use resp to parse the AI response
+	fmt.Println(resp.Choices[0].Message.Content)
+
 	// Parse the response and group songs
-	groupedSongs := make(map[string][]service.Song)
+	groupedSongs := make(map[string][]models.Song)
 	// Implement the logic to parse the AI response and group songs
 	// This is a mock implementation
-	groupedSongs["Pop"] = []service.Song{
+	groupedSongs["Pop"] = []models.Song{
 		{Name: "Shape of You", Artist: "Ed Sheeran"},
 		{Name: "Blinding Lights", Artist: "The Weeknd"},
 	}
-	groupedSongs["Rock"] = []service.Song{
+	groupedSongs["Rock"] = []models.Song{
 		{Name: "Bohemian Rhapsody", Artist: "Queen"},
 	}
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/zmb3/spotify/v2"
+	spotifyauth "github.com/zmb3/spotify/v2/auth"
 )
 
 type Client struct {
@@ -12,7 +13,7 @@ type Client struct {
 }
 
 func NewClient() (*Client, error) {
-	// Spotify api credentials
+	// Spotify API credentials
 	clientID := "your-client-id"
 	clientSecret := "your-client-secret"
 	redirectURL := "http://localhost:8080/callback"
@@ -28,12 +29,12 @@ func NewClient() (*Client, error) {
 	)
 
 	// Get the OAuth2 token
-	token, err := auth.Token(context.Background(), "user-state")
+	token, err := auth.Exchange(context.Background(), "authorization-code")
 	if err != nil {
 		return nil, fmt.Errorf("failed to get OAuth2 token: %v", err)
 	}
 
-	// Create spotify client
+	// Create Spotify client
 	httpClient := auth.Client(context.Background(), token)
 	client := spotify.New(httpClient)
 
@@ -41,11 +42,17 @@ func NewClient() (*Client, error) {
 }
 
 func (c *Client) GetLikedSongs() ([]spotify.FullTrack, error) {
-	// Fetch liked songs from spotify api
+	// Fetch liked songs from Spotify API
 	results, err := c.client.CurrentUsersTracks(context.Background())
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch liked songs: %v", err)
 	}
 
-	return results.Tracks, nil
+	// Convert to []spotify.FullTrack
+	var tracks []spotify.FullTrack
+	for _, item := range results.Tracks {
+		tracks = append(tracks, item.FullTrack)
+	}
+
+	return tracks, nil
 }
